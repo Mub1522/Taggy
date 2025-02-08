@@ -42,22 +42,22 @@ function activate(context) {
       const tagColor = await vscode.window.showQuickPick(
         [
           {
-            label: "Green ✔️",
+            label: "Green 🍀",
             value: "editorGutter.addedBackground",
           },
-          { label: "Red ❗", value: "editorError.foreground" },
-          { label: "Yellow ⚠️", value: "editorWarning.foreground" },
+          { label: "Red 💗", value: "editorError.foreground" },
+          { label: "Yellow 🍌", value: "editorWarning.foreground" },
           { label: "Blue 🔵", value: "editorInfo.foreground" },
           {
             label: "Gray ⚫",
             value: "gitDecoration.ignoredResourceForeground",
           },
           {
-            label: "Light Green 🟢",
+            label: "Light Green 🍐",
             value: "gitDecoration.untrackedResourceForeground",
           },
           {
-            label: "Dark Red 🔴",
+            label: "Dark Red 🍒",
             value: "editorGutter.deletedBackground",
           },
         ],
