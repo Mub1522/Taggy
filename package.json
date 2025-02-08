@@ -42,5 +42,17 @@
     "eslint": "^9.19.0",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1"
+  },
+  "keywords": [
+    "tags",
+    "organize",
+    "files",
+    "visual",
+    "file badges",
+    "productivity"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mub1522/Taggy.git"
   }
 }
