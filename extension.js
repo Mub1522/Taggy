@@ -7,7 +7,7 @@ let tagsFilePath;
 function activate(context) {
   console.log('Extension "taggy" is now active!');
 
-  /* Crear el archivo tags.json si no existe en el global storage */
+  /* Create tags.json file if it does not exist in global storage */
   tagsFilePath = path.join(context.globalStorageUri.fsPath, "tags.json");
 
   if (!fs.existsSync(context.globalStorageUri.fsPath)) {
@@ -17,7 +17,7 @@ function activate(context) {
     fs.writeFileSync(tagsFilePath, "{}", "utf8");
   }
 
-  /* Comando para agregar tags */
+  /* Command to add tags */
   const addTagCommand = vscode.commands.registerCommand(
     "taggy.addTag",
     async (uri) => {
@@ -28,7 +28,7 @@ function activate(context) {
         return;
       }
 
-      /* Solicitar la informacion del tag */
+      /* Request tag information */
       const tag = await vscode.window.showInputBox({
         prompt: "Write a tag for this file:",
         placeHolder: "For example: Important, Review, etc.",
@@ -42,22 +42,22 @@ function activate(context) {
       const tagColor = await vscode.window.showQuickPick(
         [
           {
-            label: "✔️ Success (Green)",
+            label: "Green ✔️",
             value: "editorGutter.addedBackground",
           },
-          { label: "❗ Error (Red)", value: "editorError.foreground" },
-          { label: "⚠️ Warning (Yellow)", value: "editorWarning.foreground" },
-          { label: "🔵 Info (Blue)", value: "editorInfo.foreground" },
+          { label: "Red ❗", value: "editorError.foreground" },
+          { label: "Yellow ⚠️", value: "editorWarning.foreground" },
+          { label: "Blue 🔵", value: "editorInfo.foreground" },
           {
-            label: "⚫ Ignored (Gray)",
+            label: "Gray ⚫",
             value: "gitDecoration.ignoredResourceForeground",
           },
           {
-            label: "🟢 Untracked (Light Green)",
+            label: "Light Green 🟢",
             value: "gitDecoration.untrackedResourceForeground",
           },
           {
-            label: "🔴 Deleted (Dark Red)",
+            label: "Dark Red 🔴",
             value: "editorGutter.deletedBackground",
           },
         ],
@@ -70,26 +70,26 @@ function activate(context) {
         vscode.window.showErrorMessage("No color has been selected.");
         return;
       }
-      /* Leer y guardar el nuevo tag */
+      /* Read and save the new tag */
       const tags = JSON.parse(fs.readFileSync(tagsFilePath, "utf8"));
 
       tags[uri.fsPath] = { name: tag, color: tagColor };
       fs.writeFileSync(tagsFilePath, JSON.stringify(tags, null, 2), "utf8");
 
       vscode.window.showInformationMessage(
-        `Tag "${tag}" with color "${tagColor}" added to "${uri.fsPath}".`
+        `Tag "${tag}" with color "${tagColor.label}" added to "${uri.fsPath}".`
       );
 
-      /* Escuchar cambios en el decorador */
+      /* Listen to changes in the decorator */
       onDidChangeFileDecorationsEmitter.fire();
     }
   );
   context.subscriptions.push(addTagCommand);
 
-  /* Emisor de eventos */
+  /* Event emitter */
   const onDidChangeFileDecorationsEmitter = new vscode.EventEmitter();
 
-  /* Registrar el provider FileDecorationProvider */
+  /* Register the FileDecorationProvider provider */
   const decorator = new FileDecorator(tagsFilePath);
   // @ts-ignore
   decorator.onDidChangeFileDecorations =
@@ -106,7 +106,7 @@ class FileDecorator {
     this.tagsFilePath = tagsFilePath;
   }
 
-  /* Uri: Identificador unico del archivo */
+  /* Uri: Unique identifier of the file */
   provideFileDecoration(uri) {
     const tags = (() => {
       try {
@@ -117,11 +117,11 @@ class FileDecorator {
       }
     })();
 
-    /* Verificar si el archivo tiene un tag asignado */
+    /* Check if the file has a tag assigned */
     const tag = tags[uri.fsPath];
     if (tag) {
       return {
-        badge: tag.name[0].toUpperCase(),
+        badge: tag.name.substring(0, 2).toUpperCase(),
         tooltip: `Tag: ${tag.name}`,
         color: new vscode.ThemeColor(tag.color.value),
       };
