@@ -23,6 +23,13 @@ function activate(context) {
   });
   context.subscriptions.push(treeView, treeDataProvider);
 
+  vscode.commands.registerCommand('taggySidebar.filter', async () => {
+    const query = await vscode.window.showInputBox({ placeHolder: "Buscar archivos etiquetados..." });
+    if (query !== undefined) {
+      treeDataProvider.filter(query);
+    }
+  });
+  
   /* Command to add tags */
   vscode.commands.registerCommand("taggy.openFile", (filePath) => {
     try {
@@ -191,6 +198,8 @@ class FileDecorator {
 }
 
 class TaggyTreeDataProvider {
+  aditionalFilter = "";
+
   constructor(tagsFilePath) {
     this.tagsFilePath = tagsFilePath;
     this._onDidChangeTreeData = new vscode.EventEmitter();
@@ -215,6 +224,10 @@ class TaggyTreeDataProvider {
 
         const rootPath = workspaceFolders[0].uri.fsPath;
         return filePath.startsWith(rootPath);
+      })
+      .filter((filePath) => {
+        if (!this.aditionalFilter) return true;
+        return tags[filePath].name.toLowerCase().includes(this.aditionalFilter.toLowerCase());
       })
       .map((filePath) => {
         const stats = fs.statSync(filePath);
@@ -246,6 +259,11 @@ class TaggyTreeDataProvider {
 
         return treeItem;
       });
+  }
+
+  filter(query) {
+    this.aditionalFilter = query;
+    this.refresh();
   }
 }
 

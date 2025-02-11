@@ -24,6 +24,11 @@
       {
         "command": "taggy.removeTag",
         "title": "Taggy: Remove Tag from File"
+      },
+      {
+        "command": "taggySidebar.filter",
+        "title": "Buscar",
+        "category": "Tagged Files"
       }
     ],
     "menus": {
@@ -35,6 +40,13 @@
         {
           "command": "taggy.removeTag",
           "group": "navigation"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "taggySidebar.filter",
+          "group": "navigation",
+          "when": "view == taggySidebar" 
         }
       ]
     },
