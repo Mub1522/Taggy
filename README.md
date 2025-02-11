@@ -13,14 +13,23 @@ Taggy is a Visual Studio Code extension that allows you to assign custom tags wi
 
 1. **Install the Extension**: Clone the repository and load it as a VS Code extension.
 2. **Add a Tag**:
-   - Right-click on a file in the explorer.
-   - Select `Add Tag`.
-   - Enter the tag name and a color (use theme color names, e.g., Green ✔️, Red ❗, Yellow ⚠️).
+   - Right-click on a file in the file explorer.
+   - Select `Taggy: Add Tag to File`.
+   - Enter the tag name and a color (use theme color names, e.g., Green 🍀, Red 💗, Yellow 🍌).
 3. **View Tags**: Tags appear as badges in the file explorer with the assigned colours and first two letters from tag.
+4. **Remove Tag**:
+   - Right-click on a file in the file explorer.
+   - Select `Taggy: Remove Tag from File`
 
 ##
 
-![Example](./images/example.png)
+<p align="center">
+  <img src="./images/example2.png" alt="Example options in navigation menu" style="width: 400px;">
+</p>
+<p align="center">
+  <img src="./images/example.png" alt="Example files with tags" style="width: 400px;">
+</p>
+
 
 ## Setup 🔨
 
