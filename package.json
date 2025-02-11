@@ -20,12 +20,20 @@
       {
         "command": "taggy.addTag",
         "title": "Add Tag to File"
+      },
+      {
+        "command": "taggy.removeTag",
+        "title": "Remove Tag from File"
       }
     ],
     "menus": {
       "explorer/context": [
         {
           "command": "taggy.addTag",
+          "group": "navigation"
+        },
+        {
+          "command": "taggy.removeTag",
           "group": "navigation"
         }
       ]
