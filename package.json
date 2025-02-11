@@ -37,6 +37,24 @@
           "group": "navigation"
         }
       ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "taggy",
+          "title": "Taggy",
+          "icon": "images/taggy-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "taggy": [
+        {
+          "id": "taggySidebar",
+          "name": "Tagged Files",
+          "canSelectMany": false
+        }
+      ]
     }
   },
   "scripts": {

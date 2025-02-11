@@ -9,7 +9,6 @@ function activate(context) {
 
   /* Create tags.json file if it does not exist in global storage */
   tagsFilePath = path.join(context.globalStorageUri.fsPath, "tags.json");
-
   if (!fs.existsSync(context.globalStorageUri.fsPath)) {
     fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
   }
@@ -17,7 +16,36 @@ function activate(context) {
     fs.writeFileSync(tagsFilePath, "{}", "utf8");
   }
 
+  /* TreeView */
+  const treeDataProvider = new TaggyTreeDataProvider(tagsFilePath);
+  const treeView = vscode.window.createTreeView("taggySidebar", {
+    treeDataProvider,
+  });
+  context.subscriptions.push(treeView, treeDataProvider);
+
   /* Command to add tags */
+  vscode.commands.registerCommand("taggy.openFile", (filePath) => {
+    try {
+      const stats = fs.statSync(filePath);
+      if (stats.isDirectory()) {
+        vscode.window.showWarningMessage(
+          "Cannot open a folder directly. Please select a file."
+        );
+        return;
+      }
+
+      vscode.workspace
+        .openTextDocument(filePath)
+        .then((document) => vscode.window.showTextDocument(document))
+        // @ts-ignore
+        .catch((err) =>
+          vscode.window.showErrorMessage("Could not open file: " + err)
+        );
+    } catch (err) {
+      vscode.window.showErrorMessage("Error checking file: " + err.message);
+    }
+  });
+
   const addTagCommand = vscode.commands.registerCommand(
     "taggy.addTag",
     async (uri) => {
@@ -82,6 +110,8 @@ function activate(context) {
 
       /* Listen to changes in the decorator */
       onDidChangeFileDecorationsEmitter.fire();
+      /* Refresh TreeView */
+      treeDataProvider.refresh();
     }
   );
   context.subscriptions.push(addTagCommand);
@@ -109,7 +139,10 @@ function activate(context) {
         `Tag removed from "${path.basename(uri.fsPath)}".`
       );
 
+      /* Listen to changes in the decorator */
       onDidChangeFileDecorationsEmitter.fire();
+      /* Refresh TreeView */
+      treeDataProvider.refresh();
     }
   );
   context.subscriptions.push(removeTagCommand);
@@ -154,6 +187,56 @@ class FileDecorator {
         color: new vscode.ThemeColor(tag.color.value),
       };
     }
+  }
+}
+
+class TaggyTreeDataProvider {
+  constructor(tagsFilePath) {
+    this.tagsFilePath = tagsFilePath;
+    this._onDidChangeTreeData = new vscode.EventEmitter();
+    this.onDidChangeTreeData = this._onDidChangeTreeData.event;
+  }
+
+  getTreeItem(element) {
+    return element;
+  }
+
+  refresh() {
+    this._onDidChangeTreeData.fire();
+  }
+
+  getChildren() {
+    const tags = JSON.parse(fs.readFileSync(this.tagsFilePath, "utf8"));
+
+    return Object.keys(tags).map((filePath) => {
+      const stats = fs.statSync(filePath);
+      const isFolder = stats.isDirectory();
+      const tag = tags[filePath].name;
+
+      const treeItem = new vscode.TreeItem(
+        path.basename(filePath),
+        vscode.TreeItemCollapsibleState.None
+      );
+
+      treeItem.command = {
+        command: "taggy.openFile",
+        title: "Open File",
+        arguments: [filePath],
+      };
+
+      treeItem.iconPath = isFolder
+        ? new vscode.ThemeIcon("folder")
+        : new vscode.ThemeIcon("file");
+
+      treeItem.tooltip = isFolder
+        ? "This is a folder."
+        : "This is a file. Click to open.";
+
+      treeItem.description = `Tag: ${tag}`;
+      treeItem.resourceUri = vscode.Uri.file(filePath);
+
+      return treeItem;
+    });
   }
 }
 
