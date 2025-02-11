@@ -19,11 +19,11 @@
     "commands": [
       {
         "command": "taggy.addTag",
-        "title": "Add Tag to File"
+        "title": "Taggy: Add Tag to File"
       },
       {
         "command": "taggy.removeTag",
-        "title": "Remove Tag from File"
+        "title": "Taggy: Remove Tag from File"
       }
     ],
     "menus": {
