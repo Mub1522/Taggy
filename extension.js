@@ -75,7 +75,9 @@ function activate(context) {
       fs.writeFileSync(tagsFilePath, JSON.stringify(tags, null, 2), "utf8");
 
       vscode.window.showInformationMessage(
-        `Tag "${tag}" with color "${tagColor.label}" added to "${path.basename(uri.fsPath)}".`
+        `Tag "${tag}" with color "${tagColor.label}" added to "${path.basename(
+          uri.fsPath
+        )}".`
       );
 
       /* Listen to changes in the decorator */
@@ -100,7 +102,7 @@ function activate(context) {
       }
 
       delete tags[uri.fsPath];
-      
+
       fs.writeFileSync(tagsFilePath, JSON.stringify(tags, null, 2), "utf8");
 
       vscode.window.showInformationMessage(
