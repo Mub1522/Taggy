@@ -21,8 +21,6 @@ function activate(context) {
   const addTagCommand = vscode.commands.registerCommand(
     "taggy.addTag",
     async (uri) => {
-      vscode.window.showInformationMessage("Taggy: Add Tag to File! 🐧");
-
       if (!uri) {
         vscode.window.showErrorMessage("Select a file in the explorer.");
         return;
@@ -77,7 +75,7 @@ function activate(context) {
       fs.writeFileSync(tagsFilePath, JSON.stringify(tags, null, 2), "utf8");
 
       vscode.window.showInformationMessage(
-        `Tag "${tag}" with color "${tagColor.label}" added to "${uri.fsPath}".`
+        `Tag "${tag}" with color "${tagColor.label}" added to "${path.basename(uri.fsPath)}".`
       );
 
       /* Listen to changes in the decorator */
@@ -85,6 +83,34 @@ function activate(context) {
     }
   );
   context.subscriptions.push(addTagCommand);
+
+  const removeTagCommand = vscode.commands.registerCommand(
+    "taggy.removeTag",
+    async (uri) => {
+      if (!uri) {
+        vscode.window.showErrorMessage("Select a file in the explorer.");
+        return;
+      }
+
+      const tags = JSON.parse(fs.readFileSync(tagsFilePath, "utf8"));
+
+      if (!tags[uri.fsPath]) {
+        vscode.window.showErrorMessage("This file does not have a tag.");
+        return;
+      }
+
+      delete tags[uri.fsPath];
+      
+      fs.writeFileSync(tagsFilePath, JSON.stringify(tags, null, 2), "utf8");
+
+      vscode.window.showInformationMessage(
+        `Tag removed from "${path.basename(uri.fsPath)}".`
+      );
+
+      onDidChangeFileDecorationsEmitter.fire();
+    }
+  );
+  context.subscriptions.push(removeTagCommand);
 
   /* Event emitter */
   const onDidChangeFileDecorationsEmitter = new vscode.EventEmitter();
