@@ -208,35 +208,44 @@ class TaggyTreeDataProvider {
   getChildren() {
     const tags = JSON.parse(fs.readFileSync(this.tagsFilePath, "utf8"));
 
-    return Object.keys(tags).map((filePath) => {
-      const stats = fs.statSync(filePath);
-      const isFolder = stats.isDirectory();
-      const tag = tags[filePath].name;
+    return Object.keys(tags)
+      .filter((filePath) => {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders) return false;
 
-      const treeItem = new vscode.TreeItem(
-        path.basename(filePath),
-        vscode.TreeItemCollapsibleState.None
-      );
+        const rootPath = workspaceFolders[0].uri.fsPath;
+        return filePath.startsWith(rootPath);
+      })
+      .map((filePath) => {
+        const stats = fs.statSync(filePath);
+        const isFolder = stats.isDirectory();
+        const tag = tags[filePath].name;
+        console.log(filePath);
 
-      treeItem.command = {
-        command: "taggy.openFile",
-        title: "Open File",
-        arguments: [filePath],
-      };
+        const treeItem = new vscode.TreeItem(
+          path.basename(filePath),
+          vscode.TreeItemCollapsibleState.None
+        );
 
-      treeItem.iconPath = isFolder
-        ? new vscode.ThemeIcon("folder")
-        : new vscode.ThemeIcon("file");
+        treeItem.command = {
+          command: "taggy.openFile",
+          title: "Open File",
+          arguments: [filePath],
+        };
 
-      treeItem.tooltip = isFolder
-        ? "This is a folder."
-        : "This is a file. Click to open.";
+        treeItem.iconPath = isFolder
+          ? new vscode.ThemeIcon("folder")
+          : new vscode.ThemeIcon("file");
 
-      treeItem.description = `Tag: ${tag}`;
-      treeItem.resourceUri = vscode.Uri.file(filePath);
+        treeItem.tooltip = isFolder
+          ? "This is a folder."
+          : "This is a file. Click to open.";
 
-      return treeItem;
-    });
+        treeItem.description = `Tag: ${tag}`;
+        treeItem.resourceUri = vscode.Uri.file(filePath);
+
+        return treeItem;
+      });
   }
 }
 
