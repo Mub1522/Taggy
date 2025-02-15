@@ -2,7 +2,7 @@
   "name": "taggy",
   "displayName": "Taggy",
   "description": "Taggy is a VSCode extension that lets you assign and display custom tags on files. Tags are shown as badges on file icons, making it easier to categorize and organize your project. 📖",
-  "version": "1.1.1",
+  "version": "2.1.1",
   "publisher": "Muuuub",
   "icon": "images/logo.jpg",
   "engines": {
@@ -14,7 +14,7 @@
   "activationEvents": [
     "onStartupFinished"
   ],
-  "main": "./extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
@@ -57,19 +57,6 @@
       ]
     }
   },
-  "scripts": {
-    "lint": "eslint .",
-    "pretest": "npm run lint",
-    "test": "vscode-test"
-  },
-  "devDependencies": {
-    "@types/vscode": "^1.96.0",
-    "@types/mocha": "^10.0.10",
-    "@types/node": "20.x",
-    "eslint": "^9.19.0",
-    "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
-  },
   "keywords": [
     "tags",
     "organize",
@@ -81,5 +68,18 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Mub1522/Taggy.git"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.17.19",
+    "@types/vscode": "^1.96.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "typescript": "^5.7.3"
   }
 }
