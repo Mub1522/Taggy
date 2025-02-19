@@ -172,12 +172,11 @@ export function registerFilterTagsCommand(
       const inputBox = vscode.window.createInputBox();
       let filterApplied = false;
 
-      inputBox.title = "Filter tags by name";
+      inputBox.title = "Filter tagged files by tags";
       inputBox.placeholder = "For example: Important, Review, etc.";
-      inputBox.ignoreFocusOut = true;
+      inputBox.ignoreFocusOut = false;
 
       inputBox.onDidChangeValue((value) => {
-        console.log(value);
         treeDataProvider.setFilter(value);
       });
 

@@ -24,7 +24,6 @@ export class TaggyTreeDataProvider
 
   getChildren(): vscode.TreeItem[] {
     const tags = JSON.parse(fs.readFileSync(this.tagsFilePath, "utf8"));
-    console.log(tags);
 
     return Object.keys(tags)
       .filter((filePath) => {
