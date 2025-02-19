@@ -10,6 +10,8 @@ export class TaggyTreeDataProvider
   readonly onDidChangeTreeData: vscode.Event<void> =
     this._onDidChangeTreeData.event;
 
+  private aditionalFilter: string = "";
+
   constructor(private tagsFilePath: string) {}
 
   getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
@@ -31,6 +33,12 @@ export class TaggyTreeDataProvider
 
         const rootPath = workspaceFolders[0].uri.fsPath;
         return filePath.startsWith(rootPath);
+      })
+      .filter((filePath) => {
+        if (!this.aditionalFilter) return true;
+
+        const tag = tags[filePath].name;
+        return tag.includes(this.aditionalFilter);
       })
       .map((filePath) => {
         const stats = fs.statSync(filePath);
@@ -61,5 +69,10 @@ export class TaggyTreeDataProvider
 
         return treeItem;
       });
+  }
+
+  setFilter(filter: string): void {
+    this.aditionalFilter = filter;
+    this.refresh();
   }
 }

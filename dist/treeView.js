@@ -9,6 +9,7 @@ class TaggyTreeDataProvider {
         this.tagsFilePath = tagsFilePath;
         this._onDidChangeTreeData = new vscode.EventEmitter();
         this.onDidChangeTreeData = this._onDidChangeTreeData.event;
+        this.aditionalFilter = "";
     }
     getTreeItem(element) {
         return element;
@@ -26,6 +27,12 @@ class TaggyTreeDataProvider {
                 return false;
             const rootPath = workspaceFolders[0].uri.fsPath;
             return filePath.startsWith(rootPath);
+        })
+            .filter((filePath) => {
+            if (!this.aditionalFilter)
+                return true;
+            const tag = tags[filePath].name;
+            return tag.includes(this.aditionalFilter);
         })
             .map((filePath) => {
             const stats = fs.statSync(filePath);
@@ -47,6 +54,10 @@ class TaggyTreeDataProvider {
             treeItem.resourceUri = vscode.Uri.file(filePath);
             return treeItem;
         });
+    }
+    setFilter(filter) {
+        this.aditionalFilter = filter;
+        this.refresh();
     }
 }
 exports.TaggyTreeDataProvider = TaggyTreeDataProvider;

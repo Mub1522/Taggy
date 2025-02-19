@@ -5,6 +5,7 @@ const { registerAddTagCommand } = require("../dist/command");
 const { registerRemoveTagCommand } = require("../dist/command");
 const { TaggyTreeDataProvider } = require("../dist/treeView");
 const { FileDecorator } = require("../dist/fileDecorator");
+const { registerFilterTagsCommand } = require("../dist/command");
 
 let tagsFilePath;
 
@@ -42,6 +43,10 @@ function activate(context: vscode.ExtensionContext) {
     context,
     tagsFilePath,
     onDidChangeFileDecorationsEmitter,
+    treeDataProvider
+  );
+  registerFilterTagsCommand(
+    context, 
     treeDataProvider
   );
 }

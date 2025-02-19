@@ -161,3 +161,41 @@ export function registerOpenFileCommand(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(openFileCommand);
 }
+
+export function registerFilterTagsCommand(
+  context: vscode.ExtensionContext,
+  treeDataProvider: TaggyTreeDataProvider
+) {
+  const filterTagsCommand = vscode.commands.registerCommand(
+    "taggySidebar.filter",
+    async () => {
+      const inputBox = vscode.window.createInputBox();
+      let filterApplied = false;
+
+      inputBox.title = "Filter tags by name";
+      inputBox.placeholder = "For example: Important, Review, etc.";
+      inputBox.ignoreFocusOut = true;
+
+      inputBox.onDidChangeValue((value) => {
+        console.log(value);
+        treeDataProvider.setFilter(value);
+      });
+
+      inputBox.onDidAccept(() => {
+        filterApplied = true;
+        inputBox.hide();
+      });
+
+      inputBox.onDidHide(() => {
+        if (!filterApplied) {
+          treeDataProvider.setFilter("");
+        }
+        inputBox.dispose();
+      });
+
+      inputBox.show();
+    }
+  );
+
+  context.subscriptions.push(filterTagsCommand);
+}

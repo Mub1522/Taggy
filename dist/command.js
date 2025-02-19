@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerAddTagCommand = registerAddTagCommand;
 exports.registerRemoveTagCommand = registerRemoveTagCommand;
 exports.registerOpenFileCommand = registerOpenFileCommand;
+exports.registerFilterTagsCommand = registerFilterTagsCommand;
 const vscode = require("vscode");
 const fs = require("fs");
 const path = require("path");
@@ -56,7 +57,7 @@ function registerAddTagCommand(context, tagsFilePath, onDidChangeFileDecorations
             return;
         }
         /* Read and save the new tag */
-        const tags = JSON.parse(fs.readFileSync(tagsFilePath, "utf8"));
+        const tags = (0, storage_1.readTags)(tagsFilePath);
         tags[uri.fsPath] = { name: tag, color: tagColor };
         (0, storage_1.writeTags)(tagsFilePath, tags);
         vscode.window.showInformationMessage(`Tag "${tag}" with color "${tagColor.label}" added to "${path.basename(uri.fsPath)}".`);
@@ -117,4 +118,29 @@ function registerOpenFileCommand(context) {
         }
     }));
     context.subscriptions.push(openFileCommand);
+}
+function registerFilterTagsCommand(context, treeDataProvider) {
+    const filterTagsCommand = vscode.commands.registerCommand("taggySidebar.filter", () => __awaiter(this, void 0, void 0, function* () {
+        const inputBox = vscode.window.createInputBox();
+        let filterApplied = false;
+        inputBox.title = "Filter tags by name";
+        inputBox.placeholder = "For example: Important, Review, etc.";
+        inputBox.ignoreFocusOut = true;
+        inputBox.onDidChangeValue((value) => {
+            console.log(value);
+            treeDataProvider.setFilter(value);
+        });
+        inputBox.onDidAccept(() => {
+            filterApplied = true;
+            inputBox.hide();
+        });
+        inputBox.onDidHide(() => {
+            if (!filterApplied) {
+                treeDataProvider.setFilter("");
+            }
+            inputBox.dispose();
+        });
+        inputBox.show();
+    }));
+    context.subscriptions.push(filterTagsCommand);
 }

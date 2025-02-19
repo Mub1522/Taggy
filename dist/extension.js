@@ -7,6 +7,7 @@ const { registerAddTagCommand } = require("../dist/command");
 const { registerRemoveTagCommand } = require("../dist/command");
 const { TaggyTreeDataProvider } = require("../dist/treeView");
 const { FileDecorator } = require("../dist/fileDecorator");
+const { registerFilterTagsCommand } = require("../dist/command");
 let tagsFilePath;
 function activate(context) {
     console.log('Extension "taggy" is now active!');
@@ -20,7 +21,6 @@ function activate(context) {
     /* Register the FileDecorationProvider provider */
     const onDidChangeFileDecorationsEmitter = new vscode.EventEmitter();
     const decorator = new FileDecorator(tagsFilePath);
-    // @ts-ignore
     decorator.onDidChangeFileDecorations =
         onDidChangeFileDecorationsEmitter.event;
     const provider = vscode.window.registerFileDecorationProvider(decorator);
@@ -29,6 +29,7 @@ function activate(context) {
     registerOpenFileCommand(context);
     registerAddTagCommand(context, tagsFilePath, onDidChangeFileDecorationsEmitter, treeDataProvider);
     registerRemoveTagCommand(context, tagsFilePath, onDidChangeFileDecorationsEmitter, treeDataProvider);
+    registerFilterTagsCommand(context, treeDataProvider);
 }
 function deactivate() { }
 module.exports = {
