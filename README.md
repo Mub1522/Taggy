@@ -29,23 +29,3 @@ Taggy is a Visual Studio Code extension that allows you to assign custom tags wi
 <p align="center">
   <img src="./images/example.png" alt="Example files with tags" style="width: 400px;">
 </p>
-
-
-## Setup 🔨
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Mub1522/Taggy.git
-   ```
-2. Open the folder in VS Code.
-3. Run the extension in the Extension Development Host by pressing F5.
-
-## Requirements for Development 👀
-
-- Visual Studio Code v1.78 or higher.
-- Node.js (LTS version recommended) or NVM to manage Node versions.
-- Yeoman (yo) and generator-code installed globally for scaffolding extensions:
-
-  ```bash
-  npm install -g yo generator-code
-  ```

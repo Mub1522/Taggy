@@ -24,7 +24,6 @@ export class TaggyTreeDataProvider
 
   getChildren(): vscode.TreeItem[] {
     const tags = JSON.parse(fs.readFileSync(this.tagsFilePath, "utf8"));
-    console.log(tags);
 
     return Object.keys(tags)
       .filter((filePath) => {
@@ -33,6 +32,12 @@ export class TaggyTreeDataProvider
 
         const rootPath = workspaceFolders[0].uri.fsPath;
         return filePath.startsWith(rootPath);
+      })
+      .filter((filePath) => {
+        if (!fs.existsSync(filePath)) {
+          return false;
+        }
+        return filePath;
       })
       .filter((filePath) => {
         if (!this.aditionalFilter) return true;

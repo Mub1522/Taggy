@@ -4,3 +4,5 @@ node_modules
 tags.json
 .idea/
 builds/
+dist
+SETUP.md
