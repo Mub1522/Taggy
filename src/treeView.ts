@@ -34,6 +34,12 @@ export class TaggyTreeDataProvider
         return filePath.startsWith(rootPath);
       })
       .filter((filePath) => {
+        if (!fs.existsSync(filePath)) {
+          return false;
+        }
+        return filePath;
+      })
+      .filter((filePath) => {
         if (!this.aditionalFilter) return true;
 
         const tag = tags[filePath].name;
