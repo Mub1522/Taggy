@@ -2,7 +2,7 @@
   "name": "taggy",
   "displayName": "Taggy",
   "description": "Taggy is a VSCode extension that lets you assign and display custom tags on files. Tags are shown as badges on file icons, making it easier to categorize and organize your project. 📖",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "publisher": "Muuuub",
   "icon": "images/logo.jpg",
   "engines": {
@@ -27,28 +27,40 @@
       },
       {
         "command": "taggySidebar.filter",
-        "title": "Search Tagged Files"
+        "title": "Buscar",
+        "category": "Tagged Files"
       }
     ],
     "menus": {
       "explorer/context": [
         {
+          "submenu": "taggySubmenu",
+          "group": "navigation@1",
+          "when": "view == taggyView"
+        },
+        {
           "command": "taggy.addTag",
-          "group": "navigation"
+          "group": "taggy@1"
         },
         {
           "command": "taggy.removeTag",
-          "group": "navigation"
+          "group": "taggy@1"
         }
       ],
       "view/title": [
         {
           "command": "taggySidebar.filter",
           "group": "navigation",
-          "when": "view == taggySidebar"
+          "when": "view == taggySidebar" 
         }
       ]
     },
+    "submenus": [
+      {
+        "id": "taggy",
+        "label": "Taggy"
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {
