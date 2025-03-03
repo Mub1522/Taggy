@@ -24,8 +24,18 @@ export class TaggyTreeDataProvider
 
   getChildren(): vscode.TreeItem[] {
     const tags = JSON.parse(fs.readFileSync(this.tagsFilePath, "utf8"));
+    let filterItem;
 
-    return Object.keys(tags)
+    if (this.aditionalFilter) {
+      filterItem = new vscode.TreeItem(
+        `Current Filter: ${this.aditionalFilter}`,
+        vscode.TreeItemCollapsibleState.None
+      );
+
+      filterItem.iconPath = new vscode.ThemeIcon("filter");
+    }
+
+    const fileItems = Object.keys(tags)
       .filter((filePath) => {
         const workspaceFolders = vscode.workspace.workspaceFolders;
         if (!workspaceFolders) return false;
@@ -74,6 +84,10 @@ export class TaggyTreeDataProvider
 
         return treeItem;
       });
+      
+      if (filterItem) {
+        return [filterItem, ...fileItems];
+      } else return fileItems;
   }
 
   setFilter(filter: string): void {

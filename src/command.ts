@@ -186,7 +186,7 @@ export function registerFilterTagsCommand(
       });
 
       inputBox.onDidHide(() => {
-        if (!filterApplied) {
+        if (!filterApplied || inputBox.value === "") {
           treeDataProvider.setFilter("");
         }
         inputBox.dispose();
